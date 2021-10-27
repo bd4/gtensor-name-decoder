@@ -5,6 +5,7 @@ grammar N {
         | <assign>
         | <launch>
         | <expr>
+        | <type>
     }
     token expr {
         | <gfunction>
@@ -127,24 +128,28 @@ class ShortenAction {
     }
 }
 
-my $assign6d = 'gt::detail::kernel_assign_6<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > > >(gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::plus, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >, gt::gfunction<gt::ops::multiply, gt::gview<gt::gtensor_span<double, 6ul, gt::space::thrust>, 6ul>, gt::gview<gt::gtensor_span<thrust::complex<double>, 6ul, gt::space::thrust>, 6ul> > >)';
-
 my @tests = [
   'gt::complex<float>',
   'gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>',
   'gt::gview<gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>, 4ul>',
   'gt::detail::kernel_assign_1<gt::gtensor_span<double, 1ul, gt::space::thrust>, gt::gtensor_span<double, 1ul, gt::space::thrust>>(gt::gtensor_span<double, 1ul, gt::space::thrust>, gt::gtensor_span<double, 1ul, gt::space::thrust>)',
-  $assign6d,
 ];
 
-for @tests -> $n {
+sub MAIN ( Str $file = "", Bool :t($test) ) {
+  my @lines = [];
+  if ( $test ) {
+    @lines = |@tests;
+  }
+  if ( $file ) {
+    @lines = |@lines, |$file.IO.lines
+  }
+  for @lines -> $n {
     my $match = N.parse($n, :rule<TOP>, :actions(ShortenAction));
-    #my $match = N.parse($n);
     if $match {
-        say "=== '$n' ===";
-        say $match.made;
-        say "=================\n";
+        say "MATCH $n";
+        say "  => ", $match.made;
     } else {
-        say "NOT OK $n";
+        say "NO MATCH $n";
     }
+  }
 }
