@@ -30,15 +30,16 @@ my %op_map = (
 my $parser = qr{
   <nocontext:>
 
-  <TOP=expr> | <TOP=assign> | <TOP=type>
+  <TOP=expr> | <TOP=assign> | <TOP=type> | <TOP=scalar>
 
-  <rule: expr> <MATCH=gfunction> | <MATCH=span> | <MATCH=gview>
-  <token: space> gt::space:: <MATCH=(?:device|host|thrust|cuda|hip)>
+  <rule: expr> <MATCH=gfunction> | <MATCH=span> | <MATCH=gview> | <MATCH=scalar>
+  <token: space> gt::space:: <MATCH=(?:device|host|thrust|cuda|hip|sycl)>
 
   <token: dimnum> [1-6]
-  <rule: dim> <MATCH=dimnum> ul|u
+  <rule: dim> \(<.integer>\) <MATCH=dimnum>
+            | <MATCH=dimnum> ul
 
-  <rule: type> (?: <MATCH=complex> | <MATCH=fp> | <MATCH=integer> )
+  <rule: type> (?: <MATCH=complex> | <MATCH=fp> | <MATCH=integer> ) <.constref>
 
   <rule: integer> (int | long | unsigned int | unsigned long)
     <MATCH=(?{ $int_map{$CAPTURE} })>
@@ -47,10 +48,12 @@ my $parser = qr{
   <rule: complex> (?:gt|std|thrust)::complex\<
     (?: <stype=fp> | <stype=integer> ) \> <MATCH=(?{ "c$MATCH{stype}" })>
 
-  <rule: span> gt::gtensor_span\< <type>, <dim>, <space> \> 
+  <rule: constref> (?:const)? (?:\&)?
+
+  <rule: span> gt::gtensor_span\< <type>, <dim>, <space> \> <.constref>
     <MATCH=(?{ "s$MATCH{dim}\[$MATCH{type}\]" })>
 
-  <rule: gview> gt::gview \< <span>, <dim> \>
+  <rule: gview> gt::gview \< <span>, <dim> \> <.constref>
     <MATCH=(?{ "v$MATCH{dim}$MATCH{span}" })>
 
   <token: op1> gt::ops::(multiply | divide)
@@ -58,15 +61,23 @@ my $parser = qr{
   <token: op2> gt::ops::(plus | minus)
     <MATCH=(?{ $op_map{$CAPTURE} })>
 
-  <rule: gfunction> <MATCH=gfunction1> | <MATCH=gfunction2>
+  <rule: gfunction> (?: <MATCH=gfunction1> | <MATCH=gfunction2> ) <.constref>
   <rule: gfunction1> gt::gfunction\< <op1>, <expr1=expr>, <expr2=expr> \>
     <MATCH=(?{ "($MATCH{expr1} $MATCH{op1} $MATCH{expr2})" })>
   <rule: gfunction2> gt::gfunction\< <op2>, <expr1=expr>, <expr2=expr> \>
     <MATCH=(?{ "$MATCH{expr1} $MATCH{op2} $MATCH{expr2}" })>
 
-  <rule: assign> gt::detail::kernel_assign_ <dimnum>
-    \< <lhs=expr>, <rhs=expr> \> \( <alhs=expr>, <arhs=expr> \)
+  <rule: assign> <MATCH=assign1> | <MATCH=assign2>
+
+  <rule: assign1> gt::detail::kernel_assign_ <dimnum>
+    \< <lhs=expr>, <rhs=expr> \> \( <.expr>, <.expr> \)
     <MATCH=(?{ "$MATCH{lhs} =$MATCH{dimnum} $MATCH{rhs}" })>
+
+  <rule: assign2> Assign<dimnum> \< <lhs=expr>, <rhs=expr>, <.expr>, <.expr> \>
+    <MATCH=(?{ "$MATCH{lhs} =$MATCH{dimnum} $MATCH{rhs}" })>
+
+  <rule: scalar> gt::gscalar\< <type> \>
+    <MATCH=(?{ "[$MATCH{type}]" })>
 }x;
 
 my @test_types = qw/
