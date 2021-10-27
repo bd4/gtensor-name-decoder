@@ -51,8 +51,8 @@ grammar N {
         | 'float'
         | 'double'
     }
-    rule complex {
-        [ 'thrust::complex' | 'gt::complex' ] '<' <fp> '>'
+    token complex {
+        [ 'thrust' | 'gt' | 'std' ] '::complex<' [ <fp> | <integer> ] '>'
     }
     token integer {
         | 'int'
@@ -77,20 +77,17 @@ grammar N {
 
 class ShortenAction {
     method end($/) {}
-    method fp($/) { make $/.Str eq 'double' ?? 'f64' !! 'f32' }
+    method fp($/) { make $/.Str eq 'double' ?? 'F64' !! 'F32' }
     method integer($/) {
         given $/.Str {
-            when 'int'           { make 'i32' }
-            when 'unsigned int'  { make 'u32' }
-            when 'long'          { make 'i64' }
-            when 'unsigned long' { make 'u64' }
+            when 'int'           { make 'I32' }
+            when 'unsigned int'  { make 'U32' }
+            when 'long'          { make 'I64' }
+            when 'unsigned long' { make 'U64' }
         }
     }
     method complex($/) {
-       given $<fp>.made {
-           when 'f32' { make 'c32' }
-           when 'f64' { make 'c64' }
-       }
+        with $<fp> || $<integer> { make 'c' ~ .made }
     }
     method type($/) {
         with $<fp> || $<integer> || $<complex> { make .made }
@@ -109,7 +106,7 @@ class ShortenAction {
     method space($/) { make $/[0].Str }
     method gfunction($/) {
         given $<op>.made {
-            when '*' {
+            when '*' | '/' {
                 make "($<expr1>.made() $<op>.made() $<expr2>.made())"
             }
             default {
@@ -117,8 +114,8 @@ class ShortenAction {
             }
         }
     }
-    method span($/) { make "s$<dim>.made()D[$<type>.made()]" }
-    method gview($/) { make "v$<dim>.made()$<span>.made()" }
+    method span($/) { make "s{$<dim>.made()}[$<type>.made()]" }
+    method gview($/) { make "v{$<dim>.made()}{$<span>.made()}" }
     method assign($/) { make "$<lhs>.made() = $<rhs>.made()" }
     method expr($/) {
         with $/.hash.first { make .value.made }
@@ -128,28 +125,12 @@ class ShortenAction {
     }
 }
 
-my @tests = [
-  'gt::complex<float>',
-  'gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>',
-  'gt::gview<gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>, 4ul>',
-  'gt::detail::kernel_assign_1<gt::gtensor_span<double, 1ul, gt::space::thrust>, gt::gtensor_span<double, 1ul, gt::space::thrust>>(gt::gtensor_span<double, 1ul, gt::space::thrust>, gt::gtensor_span<double, 1ul, gt::space::thrust>)',
-];
-
-sub MAIN ( Str $file = "", Bool :t($test) ) {
-  my @lines = [];
-  if ( $test ) {
-    @lines = |@tests;
-  }
-  if ( $file ) {
-    @lines = |@lines, |$file.IO.lines
-  }
-  for @lines -> $n {
-    my $match = N.parse($n, :rule<TOP>, :actions(ShortenAction));
-    if $match {
-        say "MATCH $n";
-        say "  => ", $match.made;
-    } else {
-        say "NO MATCH $n";
-    }
+for $*ARGFILES.lines -> $n {
+  my $match = N.parse($n, :rule<TOP>, :actions(ShortenAction));
+  if $match {
+      say "MATCH $n";
+      say "  => ", $match.made;
+  } else {
+      say "NO MATCH $n";
   }
 }

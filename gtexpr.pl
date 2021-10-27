@@ -40,7 +40,7 @@ my $parser = qr{
 
   <rule: type> (?: <MATCH=complex> | <MATCH=fp> | <MATCH=integer> )
 
-  <token: integer> (int | long | unsigned int | unsigned long)
+  <rule: integer> (int | long | unsigned int | unsigned long)
     <MATCH=(?{ $int_map{$CAPTURE} })>
   <token: fp> (double | float)
     <MATCH=(?{ $fp_map{$CAPTURE}  })>
