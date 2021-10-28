@@ -7,6 +7,7 @@ unsigned int
 std::complex<double>
 gt::complex<float>
 thrust::complex<int>
+gt::gscalar<gt::complex<float>>
 gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>
 gt::gview<gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>, 3ul>
 gt::gfunction<gt::ops::plus, gt::gview<gt::gtensor_span<thrust::complex<double>, 4ul, gt::space::thrust>, 3ul>, gt::gtensor_span<thrust::complex<double>, 3ul, gt::space::thrust>>
