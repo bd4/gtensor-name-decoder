@@ -11,11 +11,14 @@ grammar N {
         | <gfunction>
         | <span>
         | <gview>
+        | <scalar>
     }
     token assign {
-        'gt::detail::kernel_assign_' <dimnum>
-        '<' <lhs=.expr> <.sep> <rhs=.expr> <.ws> '>'
-        '(' <alhs=.expr> <.sep> <arhs=.expr> ')'
+        | 'gt::detail::kernel_assign_' <dimnum>
+          '<' <lhs=.expr> <.sep> <rhs=.expr> <.ws> '>'
+          '(' <alhs=.expr> <.sep> <arhs=.expr> ')'
+        | 'Assign' <dimnum> '<'
+          <lhs=.expr> <.sep> <rhs=.expr> <.sep> <.expr> <.sep> <.expr> '>'
     }
     token dimnum {
         <[1..6]>
@@ -24,28 +27,29 @@ grammar N {
         'gt::kernel_launch<' <lambda_wrapper> '>('
            <shape> <.sep> <lambda_wrapper> ')'
     }
-    token shape {
-        'gt::sarray<int' <.sep> <dim> <.ws> '>'
+    rule shape {
+        'gt::sarray<int,' <dim> '>'
     }
     token lambda_wrapper {
         'contract_wrapper::{lambda(int)$1}'
     }
-    token gfunction {
-        'gt::gfunction<' <op> <.sep> <expr1=.expr> <.sep> <expr2=.expr> <.ws> '>'
+    rule gfunction {
+        'gt::gfunction<' <op> ',' <expr1=.expr> ',' <expr2=.expr> '>'
     }
-    token span {
-        'gt::gtensor_span<' <type> <.sep> <dim> <.sep> <space> <.ws> '>'
+    rule span {
+        'gt::gtensor_span<' <type> ',' <dim> ',' <space> '>' <.constref>
     }
     token dim {
-        <dimnum> ['u' | 'ul']?
+        | <dimnum> 'ul'
+        | '(unsigned long)' <dimnum>
     }
     token space {
-        'gt::space::' (['thrust' | 'host'])
+        'gt::space::' (['thrust' | 'host' | 'sycl' | 'hip' | 'cuda' ])
     }
-    token type {
-        | <fp>
-        | <integer>
-        | <complex>
+    rule type {
+        | <fp> <.constref>
+        | <integer> <.constref>
+        | <complex> <.constref>
     }
     token fp {
         | 'float'
@@ -69,10 +73,14 @@ grammar N {
         | 'minus'
         | 'divide'
     }
-    token gview {
-        'gt::gview<' <span> <.sep> <dim> <.ws> '>'
+    rule gview {
+        'gt::gview<' <span> ',' <dim> '>' <.constref>
+    }
+    rule scalar {
+        'gt::gscalar<' <type> '>'
     }
     rule sep { ',' }
+    rule constref { ['const']? ['&']? }
 }
 
 class ShortenAction {
@@ -114,9 +122,10 @@ class ShortenAction {
             }
         }
     }
-    method span($/) { make "s{$<dim>.made()}[$<type>.made()]" }
-    method gview($/) { make "v{$<dim>.made()}{$<span>.made()}" }
-    method assign($/) { make "$<lhs>.made() = $<rhs>.made()" }
+    method scalar($/)  { make "[{$<type>.made()}]" }
+    method span($/)    { make "s{$<dim>.made()}[$<type>.made()]" }
+    method gview($/)   { make "v{$<dim>.made()}{$<span>.made()}" }
+    method assign($/)  { make "$<lhs>.made() = $<rhs>.made()" }
     method expr($/) {
         with $/.hash.first { make .value.made }
     }
