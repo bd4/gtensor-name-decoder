@@ -38,8 +38,10 @@ my $parser = qr{
   <token: dimnum> [1-6]
   <rule: dim> \(<.integer>\) <MATCH=dimnum>
             | <MATCH=dimnum> ul
+            | <MATCH=dimnum>
 
-  <rule: type> (?: <MATCH=complex> | <MATCH=fp> | <MATCH=integer> ) <.constref>
+  <rule: type> (?:const)? (?: <MATCH=complex> | <MATCH=fp> | <MATCH=integer> )
+    <.constref>
 
   <rule: integer> (int | long | unsigned int | unsigned long)
     <MATCH=(?{ $int_map{$CAPTURE} })>
