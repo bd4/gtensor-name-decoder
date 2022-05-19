@@ -69,7 +69,7 @@ my $parser = qr{
   <rule: gfunction2> gt::gfunction\< <op2>, <expr1=expr>, <expr2=expr> \>
     <MATCH=(?{ "$MATCH{expr1} $MATCH{op2} $MATCH{expr2}" })>
 
-  <rule: assign> <MATCH=assign1> | <MATCH=assign2>
+  <rule: assign> <MATCH=assign1> | <MATCH=assign2> | <MATCH=assignN>
 
   <rule: assign1> gt::detail::kernel_assign_ <dimnum>
     \< <lhs=expr>, <rhs=expr> \> \( <.expr>, <.expr> \)
@@ -78,8 +78,15 @@ my $parser = qr{
   <rule: assign2> Assign<dimnum> \< <lhs=expr>, <rhs=expr>, <.expr>, <.expr> \>
     <MATCH=(?{ "$MATCH{lhs} =$MATCH{dimnum} $MATCH{rhs}" })>
 
+  <rule: assignN> gt::detail::kernel_assign_N
+    \< <lhs=expr>, <rhs=expr>, <dim> \> \( <.expr>, <.expr>, <.integer>, <.sarray> \)
+    <MATCH=(?{ "$MATCH{lhs} =N$MATCH{dim} $MATCH{rhs}" })>
+
   <rule: scalar> gt::gscalar\< <type> \>
     <MATCH=(?{ "[$MATCH{type}]" })>
+
+  <rule: sarray> gt::sarray\< <integer>, <dim> \>
+    <MATCH=(?{ "shp$MATCH{dim}" })>
 }x;
 
 my @test_types = qw/
